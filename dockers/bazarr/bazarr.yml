@@ -16,8 +16,8 @@
       - "traefik.http.routers.bazarr_{{ user }}-router.service=bazarr_{{ user }}-service"
       - "traefik.http.routers.bazarr_{{ user }}-router.tls=true"
       - "traefik.http.routers.bazarr_{{ user }}-router.tls.certresolver=myhttpchallenge"
-      - "traefik.http.services.bazarr_{{ user }}-service.loadbalancer.server.port=6767"
       - "traefik.http.routers.bazarr_{{ user }}-router.middlewares={{ user }}_bazarr-auth"
+      - "traefik.http.services.bazarr_{{ user }}-service.loadbalancer.server.port=6767"
       - "traefik.http.middlewares.{{ user }}_bazarr-auth.basicauth.users={{ user }}:${passwd_{{ user }}}"
     environment:
       - PUID=${MYUID}

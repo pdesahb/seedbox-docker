@@ -17,8 +17,8 @@
       - "traefik.http.routers.sabnzbd_{{ user }}-router.service=sabnzbd_{{ user }}-service"
       - "traefik.http.routers.sabnzbd_{{ user }}-router.tls=true"
       - "traefik.http.routers.sabnzbd_{{ user }}-router.tls.certresolver=myhttpchallenge"
-      - "traefik.http.services.sabnzbd_{{ user }}-service.loadbalancer.server.port=8080"
       - "traefik.http.routers.sabnzbd_{{ user }}-router.middlewares={{ user }}_sabnzbd-auth"
+      - "traefik.http.services.sabnzbd_{{ user }}-service.loadbalancer.server.port=8080"
       - "traefik.http.middlewares.{{ user }}_sabnzbd-auth.basicauth.users={{ user }}:${passwd_{{ user }}}"
     environment:
       - SABNZBD_UID=${MYUID}

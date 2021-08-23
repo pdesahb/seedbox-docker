@@ -34,8 +34,8 @@ services:
       # Certificate Resolver
       - "--certificatesresolvers.myhttpchallenge.acme.email=${ADMIN_EMAIL}"
       - "--certificatesresolvers.myhttpchallenge.acme.storage=/etc/traefik/acme.json"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge=true"
+      - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge.entrypoint=web"
       - "--serverstransport.insecureskipverify=true"
     labels:
       # Api
@@ -165,8 +165,8 @@ services:
       - "traefik.http.routers.jellyfin-router.service=jellyfin-service"
       - "traefik.http.routers.jellyfin-router.rule=Host(`${JELLYFIN_BASE_URL}.${SERVER_BASE_URL}`) "
       - "traefik.http.routers.jellyfin-router.tls=true"
+      - "traefik.http.routers.jellyfin-router.tls.certresolver=myhttpchallenge"
       - "traefik.http.services.jellyfin-service.loadbalancer.server.port=8096"
-      - "traefik.http.routers.jellyfin.tls.certresolver=myhttpchallenge"
     volumes:
       - $CONFIG_DIR/jellyfin/config:/config
       - $DATA_DIR:/data
@@ -207,10 +207,10 @@ services:
       - "traefik.http.routers.netdata-router.service=netdata-service"
       - "traefik.http.routers.netdata-router.rule=Host(`${NETDATA_BASE_URL}.${SERVER_BASE_URL}`) "
       - "traefik.http.routers.netdata-router.tls=true"
+      - "traefik.http.routers.netdata-router.tls.certresolver=myhttpchallenge"
       - "traefik.http.services.netdata-service.loadbalancer.server.port=19999"
       - "traefik.http.routers.netdata-router.middlewares=netdata-auth"
       - "traefik.http.middlewares.netdata-auth.basicauth.users=admin:${passwd_admin}"
-      - "traefik.http.routers.netdata.tls.certresolver=myhttpchallenge"
     cap_add:
       - SYS_PTRACE
     security_opt:

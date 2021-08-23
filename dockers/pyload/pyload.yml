@@ -16,8 +16,8 @@
       - "traefik.http.routers.pyload_{{ user }}-router.service=pyload_{{ user }}-service"
       - "traefik.http.routers.pyload_{{ user }}-router.tls=true"
       - "traefik.http.routers.pyload_{{ user }}-router.tls.certresolver=myhttpchallenge"
-      - "traefik.http.services.pyload_{{ user }}-service.loadbalancer.server.port=8000"
       - "traefik.http.routers.pyload_{{ user }}-router.middlewares={{ user }}_pyload-auth"
+      - "traefik.http.services.pyload_{{ user }}-service.loadbalancer.server.port=8000"
       - "traefik.http.middlewares.{{ user }}_pyload-auth.basicauth.users={{ user }}:${passwd_{{ user }}}"
     environment:
       - PUID=${MYUID}

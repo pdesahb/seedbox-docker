@@ -13,8 +13,8 @@
       - "traefik.http.routers.rutorrent_{{ user }}-router.service=rutorrent_{{ user }}-service"
       - "traefik.http.routers.rutorrent_{{ user }}-router.tls=true"
       - "traefik.http.routers.rutorrent_{{ user }}-router.tls.certresolver=myhttpchallenge"
-      - "traefik.http.services.rutorrent_{{ user }}-service.loadbalancer.server.port=8080"
       - "traefik.http.routers.rutorrent_{{ user }}-router.middlewares={{ user }}_rutorrent-auth"
+      - "traefik.http.services.rutorrent_{{ user }}-service.loadbalancer.server.port=8080"
       - "traefik.http.middlewares.{{ user }}_rutorrent-auth.basicauth.users={{ user }}:${passwd_{{ user }}}"
     volumes:
       - $DATA_DIR/{{ user }}/data:/data

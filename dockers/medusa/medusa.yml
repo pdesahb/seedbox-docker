@@ -13,8 +13,8 @@
       - "traefik.http.routers.medusa_{{ user }}-router.service=medusa_{{ user }}-service"
       - "traefik.http.routers.medusa_{{ user }}-router.tls=true"
       - "traefik.http.routers.medusa_{{ user }}-router.tls.certresolver=myhttpchallenge"
-      - "traefik.http.services.medusa_{{ user }}-service.loadbalancer.server.port=8081"
       - "traefik.http.routers.medusa_{{ user }}-router.middlewares={{ user }}_medusa-auth"
+      - "traefik.http.services.medusa_{{ user }}-service.loadbalancer.server.port=8081"
       - "traefik.http.middlewares.{{ user }}_medusa-auth.basicauth.users={{ user }}:${passwd_{{ user }}}"
     volumes:
       - $DATA_DIR/{{ user }}/data:/data

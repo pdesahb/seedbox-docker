@@ -16,8 +16,8 @@
       - "traefik.http.routers.lidarr_{{ user }}-router.service=lidarr_{{ user }}-service"
       - "traefik.http.routers.lidarr_{{ user }}-router.tls=true"
       - "traefik.http.routers.lidarr_{{ user }}-router.tls.certresolver=myhttpchallenge"
-      - "traefik.http.services.lidarr_{{ user }}-service.loadbalancer.server.port=8686"
       - "traefik.http.routers.lidarr_{{ user }}-router.middlewares={{ user }}_lidarr-auth"
+      - "traefik.http.services.lidarr_{{ user }}-service.loadbalancer.server.port=8686"
       - "traefik.http.middlewares.{{ user }}_lidarr-auth.basicauth.users={{ user }}:${passwd_{{ user }}}"
     environment:
       - PUID=${MYUID}

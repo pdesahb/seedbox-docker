@@ -12,7 +12,7 @@
       - "app.user=readarr_{{ user }}"
       - "traefik.enable=true"
       - "traefik.http.routers.readarr_{{ user }}-router.entrypoints=websecure"
-      - "traefik.http.routers.readarr_{{ user }}-router.rule=Host(`${READARR_BASE_URL}.{{ user }}.${SERVER_BASE_URL}`)"
+      - "traefik.http.routers.readarr_{{ user }}-router.rule=Host(`{{ user }}.${SERVER_BASE_URL}`) && PathPrefix(`/${READARR_BASE_URL}/`)"
       - "traefik.http.routers.readarr_{{ user }}-router.service=readarr_{{ user }}-service"
       - "traefik.http.routers.readarr_{{ user }}-router.tls=true"
       - "traefik.http.routers.readarr_{{ user }}-router.tls.certresolver=myhttpchallenge"

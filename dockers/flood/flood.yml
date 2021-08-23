@@ -11,7 +11,7 @@
       - "app.user=flood_{{ user }}"
       - "traefik.enable=true"
       - "traefik.http.routers.flood_{{ user }}-router.entrypoints=websecure"
-      - "traefik.http.routers.flood_{{ user }}-router.rule=Host(`${FLOOD_BASE_URL}.{{ user }}.${SERVER_BASE_URL}`)"
+      - "traefik.http.routers.flood_{{ user }}-router.rule=Host(`{{ user }}.${SERVER_BASE_URL}`) && PathPrefix(`/${FLOOD_BASE_URL}/`)"
       - "traefik.http.routers.flood_{{ user }}-router.service=flood_{{ user }}-service"
       - "traefik.http.routers.flood_{{ user }}-router.tls=true"
       - "traefik.http.routers.flood_{{ user }}-router.tls.certresolver=myhttpchallenge"
@@ -20,10 +20,11 @@
       - $DATA_DIR/{{ user }}/data:/data
       - $DATA_DIR/{{ user }}/config/torrent:/config
       - $DATA_DIR/{{ user }}/config/torrent/run/rtorrent:/config/.local/share/rtorrent/
-    command: --port 3001 --allowedpath /data
+    command: --port 3001 --allowedpath /data --baseuri /${FLOOD_BASE_URL}/
     environment:
       - TZ=${TZ}
       - HOME=/config
+      - FLOOD_BASE_URL=${FLOOD_BASE_URL}
     networks:
       - proxy
 # end flood

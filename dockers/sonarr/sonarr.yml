@@ -12,7 +12,7 @@
       - "app.user=sonarr_{{ user }}"
       - "traefik.enable=true"
       - "traefik.http.routers.sonarr_{{ user }}-router.entrypoints=websecure"
-      - "traefik.http.routers.sonarr_{{ user }}-router.rule=Host(`${SONARR_BASE_URL}.{{ user }}.${SERVER_BASE_URL}`)"
+      - "traefik.http.routers.sonarr_{{ user }}-router.rule=Host(`{{ user }}.${SERVER_BASE_URL}`) && PathPrefix(`/${SONARR_BASE_URL}/`)"
       - "traefik.http.routers.sonarr_{{ user }}-router.service=sonarr_{{ user }}-service"
       - "traefik.http.routers.sonarr_{{ user }}-router.tls=true"
       - "traefik.http.routers.sonarr_{{ user }}-router.tls.certresolver=myhttpchallenge"

@@ -12,7 +12,7 @@
       - "app.user=radarr_{{ user }}"
       - "traefik.enable=true"
       - "traefik.http.routers.radarr_{{ user }}-router.entrypoints=websecure"
-      - "traefik.http.routers.radarr_{{ user }}-router.rule=Host(`${RADARR_BASE_URL}.{{ user }}.${SERVER_BASE_URL}`)"
+      - "traefik.http.routers.radarr_{{ user }}-router.rule=Host(`{{ user }}.${SERVER_BASE_URL}`) && PathPrefix(`/${RADARR_BASE_URL}/`)"
       - "traefik.http.routers.radarr_{{ user }}-router.service=radarr_{{ user }}-service"
       - "traefik.http.routers.radarr_{{ user }}-router.tls=true"
       - "traefik.http.routers.radarr_{{ user }}-router.tls.certresolver=myhttpchallenge"

@@ -27,9 +27,10 @@
       - "app.user=filerun_{{ user }}"
       - "traefik.enable=true"
       - "traefik.http.routers.filerun_{{ user }}-router.entrypoints=websecure"
-      - "traefik.http.routers.filerun_{{ user }}-router.rule=Host(`{{ user }}-${FILERUN_BASE_URL}-${SERVER_BASE_URL}.${DOMAIN_URL}`)"
+      - "traefik.http.routers.filerun_{{ user }}-router.rule=Host(`${FILERUN_BASE_URL}.{{ user }}.${SERVER_BASE_URL}`)"
       - "traefik.http.routers.filerun_{{ user }}-router.service=filerun_{{ user }}-service"
       - "traefik.http.routers.filerun_{{ user }}-router.tls=true"
+      - "traefik.http.routers.filerun_{{ user }}-router.tls.certresolver=myhttpchallenge"
       - "traefik.http.services.filerun_{{ user }}-service.loadbalancer.server.port=80"
     volumes:
       - $DATA_DIR/{{ user }}/data:/user-files

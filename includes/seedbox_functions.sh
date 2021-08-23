@@ -1,16 +1,5 @@
 #!/bin/bash
 
-function deleteRecordInDomain {
-    appInstalled=`docker ps -a --format "{{.Names}}" --filter "label=user=${username}"`
-    for app in $appInstalled
-    do
-        app_name=$(echo $app | cut -d '_' -f1)
-        cd ansible || exit 1
-        ansible-playbook -i hosts site.yml --extra-vars "username=${username} application=${app_name} state=absent"
-        cd ..
-    done
-}
-
 function actionSeedbox {
     appInstalled=`docker ps -a --format "{{.Names}}" --filter "label=user=${username}"`
     for app in $appInstalled
@@ -33,7 +22,7 @@ function actionAllSeedbox {
 
 function recreateSeedbox {
     cd docker-compose || error "Cannot go in docker-compose" 1
-    docker-compose -f "${username}.yml" stop
+    docker-compose -f "${username}.yml" down
     docker-compose -f "${username}.yml" up -d
 }
 

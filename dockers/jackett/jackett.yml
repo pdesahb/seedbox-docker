@@ -9,9 +9,10 @@
       - "app.user=jackett_{{ user }}"
       - "traefik.enable=true"
       - "traefik.http.routers.jackett_{{ user }}-router.entrypoints=websecure"
-      - "traefik.http.routers.jackett_{{ user }}-router.rule=Host(`{{ user }}-${JACKETT_BASE_URL}-${SERVER_BASE_URL}.${DOMAIN_URL}`)"
+      - "traefik.http.routers.jackett_{{ user }}-router.rule=Host(`${JACKETT_BASE_URL}.{{ user }}.${SERVER_BASE_URL}`)"
       - "traefik.http.routers.jackett_{{ user }}-router.service=jackett_{{ user }}-service"
       - "traefik.http.routers.jackett_{{ user }}-router.tls=true"
+      - "traefik.http.routers.jackett_{{ user }}-router.tls.certresolver=myhttpchallenge"
       - "traefik.http.services.jackett_{{ user }}-service.loadbalancer.server.port=9117"
     volumes:
       - $DATA_DIR/{{ user }}/config/jackett:/config

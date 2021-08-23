@@ -41,6 +41,7 @@ function showHelp {
         [ --restart ]          : Restart seedbox
                 [ --seedbox username ]                      : Restart the specified seedbox
                 [ --all-seedbox ]                           : Restart all seedbox
+
         [ --recreate ]         : Recreate seedbox
                 [ --seedbox username ]                      : Recreate the specified seedbox
 

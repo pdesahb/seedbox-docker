@@ -1,10 +1,5 @@
 #!/bin/bash
 
-function addBaseSystemToDNS {
-    cd ansible || exit 1
-    ansible-playbook -i hosts site.yml
-    cd ..
-}
 
 function createDefaultDirectoryBase {
   mkdir -p {${DATA_DIR},${CONFIG_DIR}}
@@ -37,14 +32,12 @@ function firstInitialisation {
     if [ ! -f ${PASSWD_FILE} ]
     then
       createDefaultDirectoryBase
-      addBaseSystemToDNS
       createAdmin      
       exit 0
     fi
     if ! grep -q admin ${PASSWD_FILE}
     then
       createDefaultDirectoryBase
-      addBaseSystemToDNS
       createAdmin      
       exit 0
     else

@@ -11,9 +11,10 @@
       - "app.user=filebrowser_{{ user }}"
       - "traefik.enable=true"
       - "traefik.http.routers.filebrowser_{{ user }}-router.entrypoints=websecure"
-      - "traefik.http.routers.filebrowser_{{ user }}-router.rule=Host(`{{ user }}-${FILEBROWSER_BASE_URL}-${SERVER_BASE_URL}.${DOMAIN_URL}`)"
+      - "traefik.http.routers.filebrowser_{{ user }}-router.rule=Host(`${FILEBROWSER_BASE_URL}.{{ user }}.${SERVER_BASE_URL}`)"
       - "traefik.http.routers.filebrowser_{{ user }}-router.service=filebrowser_{{ user }}-service"
       - "traefik.http.routers.filebrowser_{{ user }}-router.tls=true"
+      - "traefik.http.routers.filebrowser_{{ user }}-router.tls.certresolver=myhttpchallenge"
       - "traefik.http.services.filebrowser_{{ user }}-service.loadbalancer.server.port=80"
     volumes:
       - $DATA_DIR/{{ user }}/data:/srv

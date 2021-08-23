@@ -32,21 +32,19 @@ services:
       - "--providers.file.directory=/etc/traefik/provider"
       - "--providers.file.watch=true"
       # Certificate Resolver
-      - "--certificatesresolvers.mydnschallenge.acme.email=${CF_API_EMAIL}"
-      - "--certificatesresolvers.mydnschallenge.acme.dnschallenge.provider=cloudflare"
-      - "--certificatesresolvers.mydnschallenge.acme.storage=/etc/traefik/acme.json"
+      - "--certificatesresolvers.myhttpchallenge.acme.email=${ADMIN_EMAIL}"
+      - "--certificatesresolvers.myhttpchallenge.acme.storage=/etc/traefik/acme.json"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
       - "--serverstransport.insecureskipverify=true"
     labels:
       # Api
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_BASE_URL}-${SERVER_BASE_URL}.${DOMAIN_URL}`)"
+      - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_BASE_URL}.${SERVER_BASE_URL}`)"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
       - "traefik.http.services.traefik.loadbalancer.server.scheme=http"
       - "traefik.http.routers.traefik.service=api@internal"
-      # Wildcard cert
-      - "traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN_URL}"
-      - "traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN_URL}"
-      - "traefik.http.routers.traefik.tls.certresolver=mydnschallenge"
+      - "traefik.http.routers.traefik.tls.certresolver=myhttpchallenge"
       # Http -> Https
       - "traefik.http.routers.http-catchall.rule=HostRegexp(`{host:.+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=web"
@@ -64,9 +62,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    environment:
-      - CLOUDFLARE_EMAIL=${CF_API_EMAIL}
-      - CLOUDFLARE_API_KEY=${CF_API_KEY}  
     networks:
       - proxy
 ##########################################
@@ -79,8 +74,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.portainer.entrypoints=websecure"
-      - "traefik.http.routers.portainer.rule=Host(`${PORTAINER_BASE_URL}-${SERVER_BASE_URL}.${DOMAIN_URL}`) "
+      - "traefik.http.routers.portainer.rule=Host(`${PORTAINER_BASE_URL}.${SERVER_BASE_URL}`) "
       - "traefik.http.routers.portainer.service=portainer-service"
+      - "traefik.http.routers.portainer.tls.certresolver=myhttpchallenge"
       - "traefik.http.routers.portainer.tls=true"
       - "traefik.http.services.portainer-service.loadbalancer.server.port=9000"
     volumes: 
@@ -137,7 +133,7 @@ services:
       - ${CONFIG_DIR}/postfix:/etc/opendkim/keys
     environment:
       - POSTFIX_myhostname="${SERVER_BASE_URL}.${DOMAIN_URL}"
-      - OPENDKIM_DOMAINS="${SERVER_BASE_URL}.${DOMAIN_URL}" "${TRAEFIK_BASE_URL}-${SERVER_BASE_URL}.${DOMAIN_URL}"
+      - OPENDKIM_DOMAINS="${SERVER_BASE_URL}" "${TRAEFIK_BASE_URL}.${SERVER_BASE_URL}"
     networks:
       - proxy
 ##########################################
@@ -167,9 +163,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.jellyfin-router.entrypoints=websecure"
       - "traefik.http.routers.jellyfin-router.service=jellyfin-service"
-      - "traefik.http.routers.jellyfin-router.rule=Host(`${JELLYFIN_BASE_URL}-${SERVER_BASE_URL}.${DOMAIN_URL}`) "
+      - "traefik.http.routers.jellyfin-router.rule=Host(`${JELLYFIN_BASE_URL}.${SERVER_BASE_URL}`) "
       - "traefik.http.routers.jellyfin-router.tls=true"
       - "traefik.http.services.jellyfin-service.loadbalancer.server.port=8096"
+      - "traefik.http.routers.jellyfin.tls.certresolver=myhttpchallenge"
     volumes:
       - $CONFIG_DIR/jellyfin/config:/config
       - $DATA_DIR:/data
@@ -208,11 +205,12 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.netdata-router.entrypoints=websecure"
       - "traefik.http.routers.netdata-router.service=netdata-service"
-      - "traefik.http.routers.netdata-router.rule=Host(`${NETDATA_BASE_URL}-${SERVER_BASE_URL}.${DOMAIN_URL}`) "
+      - "traefik.http.routers.netdata-router.rule=Host(`${NETDATA_BASE_URL}.${SERVER_BASE_URL}`) "
       - "traefik.http.routers.netdata-router.tls=true"
       - "traefik.http.services.netdata-service.loadbalancer.server.port=19999"
       - "traefik.http.routers.netdata-router.middlewares=netdata-auth"
       - "traefik.http.middlewares.netdata-auth.basicauth.users=admin:${passwd_admin}"
+      - "traefik.http.routers.netdata.tls.certresolver=myhttpchallenge"
     cap_add:
       - SYS_PTRACE
     security_opt:

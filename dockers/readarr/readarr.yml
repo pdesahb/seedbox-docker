@@ -12,9 +12,10 @@
       - "app.user=readarr_{{ user }}"
       - "traefik.enable=true"
       - "traefik.http.routers.readarr_{{ user }}-router.entrypoints=websecure"
-      - "traefik.http.routers.readarr_{{ user }}-router.rule=Host(`{{ user }}-${READARR_BASE_URL}-${SERVER_BASE_URL}.${DOMAIN_URL}`)"
+      - "traefik.http.routers.readarr_{{ user }}-router.rule=Host(`${READARR_BASE_URL}.{{ user }}.${SERVER_BASE_URL}`)"
       - "traefik.http.routers.readarr_{{ user }}-router.service=readarr_{{ user }}-service"
       - "traefik.http.routers.readarr_{{ user }}-router.tls=true"
+      - "traefik.http.routers.readarr_{{ user }}-router.tls.certresolver=myhttpchallenge"
       - "traefik.http.services.readarr_{{ user }}-service.loadbalancer.server.port=8787"
     environment:
       - PUID=${MYUID}

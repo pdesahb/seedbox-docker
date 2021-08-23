@@ -245,7 +245,6 @@ while test "$1" != --; do
                     shift 1
                     ;;
                 --delete-all )
-                    deleteRecordInDomain
                     actionSeedbox stop
                     actionSeedbox rm                    
                     deleteDockerComposeFile

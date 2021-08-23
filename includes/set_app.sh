@@ -1,9 +1,4 @@
 #!/bin/bash
-function addOrRemoveAppFromDNS {
-    cd ansible || exit 1
-    ansible-playbook -i hosts site.yml --extra-vars "username=${username} application=${appSearched} state=$1"
-    cd ..
-}
 
 function setDesiredStatusOfApp {    
     appSearched=$1
@@ -36,7 +31,6 @@ function setDesiredStatusOfApp {
             sed -i "/# start ${appSearched}/,/# end ${appSearched}/d" docker-compose/${username}.yml
             ;;
         esac
-        addOrRemoveAppFromDNS absent
     elif [ "${appSearchedOfUser}" != "${appInstalled}" ] && [ "${desiredStatus}" != "yes" ]
     then
         echo "[${appSearchedOfUser}] non modifiée"
@@ -59,7 +53,6 @@ function setDesiredStatusOfApp {
             modifyTemplateOfUser
             ;;
         esac
-        addOrRemoveAppFromDNS present
     fi
 }
 

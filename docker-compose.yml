@@ -163,10 +163,11 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.jellyfin-router.entrypoints=websecure"
       - "traefik.http.routers.jellyfin-router.service=jellyfin-service"
-      - "traefik.http.routers.jellyfin-router.rule=Host(`${JELLYFIN_BASE_URL}.${SERVER_BASE_URL}`) "
+      - "traefik.http.routers.jellyfin-router.rule=Host(`${SERVER_BASE_URL}`) && PathPrefix(`/${JELLYFIN_BASE_URL}/`)"
       - "traefik.http.routers.jellyfin-router.tls=true"
       - "traefik.http.routers.jellyfin-router.tls.certresolver=myhttpchallenge"
       - "traefik.http.services.jellyfin-service.loadbalancer.server.port=8096"
+      # - "traefik.http.middlewares.jellyfin-pathstrip.stripprefix.prefixes=/${JELLYFIN_BASE_URL}/"
     volumes:
       - $CONFIG_DIR/jellyfin/config:/config
       - $DATA_DIR:/data
@@ -200,16 +201,17 @@ services:
     image: netdata/netdata
     container_name: netdata
     restart: unless-stopped
-    hostname: "${NETDATA_BASE_URL}-${SERVER_BASE_URL}.${DOMAIN_URL}"
+    hostname: "${SERVER_BASE_URL}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.netdata-router.entrypoints=websecure"
       - "traefik.http.routers.netdata-router.service=netdata-service"
-      - "traefik.http.routers.netdata-router.rule=Host(`${NETDATA_BASE_URL}.${SERVER_BASE_URL}`) "
+      - "traefik.http.routers.netdata-router.rule=Host(`${SERVER_BASE_URL}`) && PathPrefix(`/${NETDATA_BASE_URL}/`)"
       - "traefik.http.routers.netdata-router.tls=true"
       - "traefik.http.routers.netdata-router.tls.certresolver=myhttpchallenge"
       - "traefik.http.services.netdata-service.loadbalancer.server.port=19999"
       - "traefik.http.routers.netdata-router.middlewares=netdata-auth"
+      - "traefik.http.middlewares.netdata-pathstrip.stripprefix.prefixes=/${NETDATA_BASE_URL}/"
       - "traefik.http.middlewares.netdata-auth.basicauth.users=admin:${passwd_admin}"
     cap_add:
       - SYS_PTRACE
